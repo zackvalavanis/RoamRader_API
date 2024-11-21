@@ -10,11 +10,11 @@ Rails.application.routes.draw do
   post 'homes' => 'homes#create'
 
   #Profile Routes
-  get '/places' => 'places#index'
-  get '/places/:id' => 'places#show'
-  patch '/places/:id' => 'places#update'
-  post '/places' => 'places#create'
-  delete '/places/:id' => 'places#destroy'
+  get '/cities' => 'cities#index'
+  get '/cities/:id' => 'cities#show'
+  patch '/cities/:id' => 'cities#update'
+  post '/cities' => 'cities#create'
+  delete '/cities/:id' => 'cities#destroy'
 
   # Defines the root path route ("/")
   root "homes#index"
