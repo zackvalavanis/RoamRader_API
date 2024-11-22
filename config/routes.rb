@@ -22,4 +22,8 @@ Rails.application.routes.draw do
   #sessions route
   post '/sessions' => 'sessions#create'
 
+  #users
+  post "/users" => "users#create"
+  get '/users' => 'users#index'
+
 end
