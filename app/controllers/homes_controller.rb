@@ -4,10 +4,12 @@ class HomesController < ApplicationController
   require 'httparty'
 
   def index
+
+    city_name = params[:city_name]
     
     response = HTTParty.get("https://maps.googleapis.com/maps/api/place/textsearch/json", {
       query: {
-        query: "city Paris",
+        query: "city #{city_name}",
         key: ENV['GOOGLE_PLACES_API_KEY']
       }
     })
@@ -16,19 +18,17 @@ class HomesController < ApplicationController
     render json: { message: 'HomePage', api_response: data }
   end
 
-  def create 
-    city = params[:city]
-
-    if city.blank?
-      render json: { error: 'City name is required'}, status: :bad_request
-      return 
-    end 
-    response = HTTParty.get("https://maps.googleapis.com/maps/api/place/textsearch/json", {
-      query: {
-        query: "city #{city}",
-        key: ENV['GOOGLE_PLACES_API_KEY']
-      }
-    })
+  def create
+      city_name = params[:city_name]
+  
+      response = HTTParty.get("https://maps.googleapis.com/maps/api/place/textsearch/json", {
+        query: {
+          query: "city #{city_name}",
+          key: ENV['GOOGLE_PLACES_API_KEY']
+        }
+      })
+  
+      data = response.parsed_response
 
     data = response.parsed_response
 
