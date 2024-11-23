@@ -5,7 +5,7 @@ class CitiesController < ApplicationController
 
   def index 
     @cities = City.where(user_id: current_user.id)
-    render json: @cities
+    render :index
   end 
 
   def show
@@ -64,4 +64,5 @@ class CitiesController < ApplicationController
       render json: { error: 'Failed to fetch data from the API' }, status: :unprocessable_entity
     end
   end
+  
 end

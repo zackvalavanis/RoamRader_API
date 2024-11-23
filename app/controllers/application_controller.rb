@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, unless: -> { request.format.json? }
+  helper_method :current_city
 
   def current_user
     auth_headers = request.headers["Authorization"]
@@ -24,5 +25,9 @@ class ApplicationController < ActionController::Base
       render json: {}, status: :unauthorized
     end
   end
-  
+
+  def current_city
+    @current_city ||= City.find(params[:city_id]) if params[:city_id].present?
+  end
+
 end

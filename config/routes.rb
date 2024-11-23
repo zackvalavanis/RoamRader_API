@@ -26,4 +26,11 @@ Rails.application.routes.draw do
   post "/users" => "users#create"
   get '/users' => 'users#index'
 
+  #commnets 
+  get '/comments' => 'comments#index'
+  get '/comments/:id' => 'comments#show'
+  patch '/comments/:id' => 'comments#update'
+  post '/comments' => 'comments#create'
+  delete '/comments/:id' => 'comments#destroy'
+  
 end
