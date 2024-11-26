@@ -72,3 +72,5 @@ gem 'httparty'
 
 gem 'jwt'
 
+gem 'rack-cors'
+
