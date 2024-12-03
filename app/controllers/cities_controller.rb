@@ -4,7 +4,7 @@ class CitiesController < ApplicationController
   require 'httparty'
 
   def index 
-    @cities = City.where(user_id: current_user.id)
+    @cities = City.all
     render :index
   end 
 
