@@ -33,5 +33,5 @@ Rails.application.routes.draw do
   post '/comments' => 'comments#create'
   delete '/comments/:id' => 'comments#destroy'
   #Root
-  root "users#index"
+  # root "users#index"
 end
