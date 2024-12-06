@@ -26,11 +26,12 @@ Rails.application.routes.draw do
   post "/users" => "users#create"
   get '/users' => 'users#index'
 
-  #commnets 
+  #comments 
   get '/comments' => 'comments#index'
   get '/comments/:id' => 'comments#show'
   patch '/comments/:id' => 'comments#update'
   post '/comments' => 'comments#create'
   delete '/comments/:id' => 'comments#destroy'
-  
+  #Root
+  root "users#index"
 end
