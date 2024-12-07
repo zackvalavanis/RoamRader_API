@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   #users
   post "/users" => "users#create"
   get '/users' => 'users#index'
+  get '/users/:id' => 'users#show'
+  delete '/users/:id' => 'users#destroy'
 
   #comments 
   get '/comments' => 'comments#index'
