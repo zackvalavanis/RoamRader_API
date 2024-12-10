@@ -18,6 +18,7 @@ class CitiesController < ApplicationController
     @city = City.find_by(id: params[:id])
     
     if @city
+      @city.geometry = JSON.parse(@city.geometry) if @city.geometry.present?
       # Construct the full photo URL if photo_reference exists
       if @city.photo_url
         @city.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=#{@city.photo_url}&key=#{ENV['GOOGLE_PLACES_API_KEY']}"
