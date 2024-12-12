@@ -7,21 +7,22 @@ class CitiesController < ApplicationController
     @cities = City.all
   
     @cities.each do |city|
-      city.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=#{city.photo_url}&key=#{ENV['GOOGLE_PLACES_API_KEY']}"
+      if city.photo_url.blank?
+        city.photo_url = construct_photo_url(city.photo_url) if city.photo_url.present?
+      end
     end
   
     render :index
   end
   
-
   def show
     @city = City.find_by(id: params[:id])
     
     if @city
       @city.geometry = JSON.parse(@city.geometry) if @city.geometry.present?
-      # Construct the full photo URL if photo_reference exists
-      if @city.photo_url
-        @city.photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=#{@city.photo_url}&key=#{ENV['GOOGLE_PLACES_API_KEY']}"
+      # Construct the full photo URL if photo_reference exists and is missing or invalid
+      if @city.photo_url.blank? && @city.photo_reference.present?
+        @city.photo_url = construct_photo_url(@city.photo_reference)
       end
       render :show
     else
@@ -60,9 +61,13 @@ class CitiesController < ApplicationController
   
       # Save photo reference if available
       photo_reference = new_city_data['photos']&.first&.dig('photo_reference')
+      
+      # Only assign photo_url if it doesn't exist
       if photo_reference
-        photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=#{photo_reference}&key=#{ENV['GOOGLE_PLACES_API_KEY']}"
-        @city.photo_url = photo_url
+        Rails.logger.debug "Photo Reference: #{photo_reference}"  # Log the photo reference
+        @city.photo_url = construct_photo_url(photo_reference)
+      else
+        Rails.logger.debug "No photo reference available"  # Log when there's no photo reference
       end
   
       if @city.save
@@ -75,18 +80,24 @@ class CitiesController < ApplicationController
     end
   end
   
-
   def destroy
     @city = City.find_by(id: params[:id])
-    if @city.nil? 
+    if @city.nil?
       return render json: { error: 'City not found' }, status: :not_found
     end
     @city.comments.destroy_all
 
     if @city.destroy
       render json: { message: 'The city has been deleted' }, status: :ok
-    else 
+    else
       render json: { error: 'The city could not be deleted' }, status: :bad_request
     end
+  end
+
+  private
+
+  # Method to construct the photo URL
+  def construct_photo_url(photo_reference)
+    "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=#{photo_reference}&key=#{ENV['GOOGLE_PLACES_API_KEY']}"
   end
 end
